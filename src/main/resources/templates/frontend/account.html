@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="frontend/fragments/common :: head('Tài khoản')"></head>
+<style>
+ .error {
+   color: red;
+ }
+
+</style>
+<body>
+  <th:block th:replace="frontend/fragments/header :: header"></th:block>
+
+  <div class="container-fluid pt-5">
+    <div class="row px-xl-5">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{'/account/' + ${userDto.id}}">Chỉnh sửa thông tin tài khoản</a>
+            </h5>
+            <h5 class="text-danger mb-3">[[${message}]]</h5>
+            <!-- General Form Elements -->
+            <form th:action="@{'/account/' + ${userDto.id} + '/save'}" th:method="post" th:object="${userDto}" enctype="multipart/form-data">
+              <div class="row mb-3">
+                <div class="col-sm-10">
+                  <input hidden th:field="*{id}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="username" th:field="*{username}" required readonly>
+                  <label th:if="${#fields.hasErrors('username')}" class="error" th:errors="*{username}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" hidden>
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="password" th:field="*{password}" >
+                  <label th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" hidden>
+                <label for="rePassword" class="col-sm-2 col-form-label">Re Password</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="rePassword" th:field="*{rePassword}">
+                  <label th:if="${#fields.hasErrors('rePassword')}" class="error" th:errors="*{rePassword}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="fullName" class="col-sm-2 col-form-label">Full name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="fullName" th:field="*{fullName}" required>
+                  <label th:if="${#fields.hasErrors('fullName')}" class="error" th:errors="*{fullName}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="address" th:field="*{address}" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="phone" th:field="*{phone}" required readonly>
+                  <label th:if="${#fields.hasErrors('phone')}" class="error" th:errors="*{phone}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="email" th:field="*{email}" required readonly>
+                  <label th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></label>
+                </div>
+              </div>
+              <div class="form-group row mb-3" hidden>
+                <label class="col-sm-2 col-form-label">Trạng thái:</label>
+                <div class="col-sm-10">
+                  <select th:field="*{status}" class="form-control" required>
+                    <option th:value="true">Hoạt động</option>
+                    <option th:value="false">Tạm dừng</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Sex</label>
+                <div class="col-sm-10">
+                  <select th:field="*{sex}" class="form-control" required>
+                    <option th:value="1">Nam</option>
+                    <option th:value="0">Nữ</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row mb-3" hidden>
+                <label class="col-sm-2 col-form-label">Role</label>
+                <div class="col-sm-10">
+                  <select th:field="*{role}" class="form-control" required>
+                    <option th:value="USER">USER</option>
+                    <option th:value="ADMIN">ADMIN</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Avatar</label>
+                <div class="col-sm-10">
+                  <img id="thumbnail1" alt="Xem trước nội dung ảnh" class="img-fluid mb-5" width="200px" th:src="@{${userDto.imagePath}}"/>
+
+                  <input class="form-control" type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail1(this)"
+                         th:required="${userDto.avatar == null}"
+                         accept="image/png, image/jpeg">
+                </div>
+                <input type="hidden" th:field="*{avatar}" />
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">
+                      Cập nhật
+                  </button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6">
+
+<!--        <div class="card">-->
+<!--          <div class="card-body">-->
+<!--            <h5 class="card-title">-->
+<!--              <a th:href="@{'/account/' + ${userDto.id}}">Thay đổi mật khẩu</a>-->
+<!--            </h5>-->
+<!--            &lt;!&ndash; General Form Elements &ndash;&gt;-->
+<!--            <form th:action="@{'/account/' + ${userDto.id} + '/change'}" th:method="post" th:object="${userDto}" enctype="multipart/form-data">-->
+<!--              <div class="row mb-3">-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input hidden th:field="*{id}">-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="username" class="col-sm-2 col-form-label">Username</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input type="text" class="form-control" id="username" th:field="*{username}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('username')}" class="error" th:errors="*{username}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3">-->
+<!--                <label for="password" class="col-sm-3 col-form-label">Old Password</label>-->
+<!--                <div class="col-sm-9">-->
+<!--                  <input type="password" class="form-control" id="password" th:field="*{password}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="rePassword" class="col-sm-3 col-form-label">Re Password</label>-->
+<!--                <div class="col-sm-9">-->
+<!--                  <input type="password" class="form-control" id="rePassword" th:field="*{rePassword}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('rePassword')}" class="error" th:errors="*{rePassword}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3">-->
+<!--                <label for="password" class="col-sm-3 col-form-label">New Password</label>-->
+<!--                <div class="col-sm-9">-->
+<!--                  <input type="password" class="form-control" id="password" th:field="*{newPassword}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('newPassword')}" class="error" th:errors="*{newPassword}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="fullName" class="col-sm-2 col-form-label">Full name</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input type="text" class="form-control" id="fullName" th:field="*{fullName}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('fullName')}" class="error" th:errors="*{fullName}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="address" class="col-sm-2 col-form-label">Address</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input type="text" class="form-control" id="address" th:field="*{address}" required>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="phone" class="col-sm-2 col-form-label">Phone</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input type="text" class="form-control" id="phone" th:field="*{phone}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('phone')}" class="error" th:errors="*{phone}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label for="email" class="col-sm-2 col-form-label">Email</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <input type="email" class="form-control" id="email" th:field="*{email}" required>-->
+<!--                  <label th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></label>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="form-group row mb-3" hidden>-->
+<!--                <label class="col-sm-2 col-form-label">Trạng thái:</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <select th:field="*{status}" class="form-control" required>-->
+<!--                    <option th:value="true">Hoạt động</option>-->
+<!--                    <option th:value="false">Tạm dừng</option>-->
+<!--                  </select>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="form-group row mb-3" hidden>-->
+<!--                <label class="col-sm-2 col-form-label">Sex</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <select th:field="*{sex}" class="form-control" required>-->
+<!--                    <option th:value="1">Nam</option>-->
+<!--                    <option th:value="0">Nữ</option>-->
+<!--                  </select>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="form-group row mb-3" hidden>-->
+<!--                <label class="col-sm-2 col-form-label">Role</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <select th:field="*{role}" class="form-control" required>-->
+<!--                    <option th:value="USER">USER</option>-->
+<!--                    <option th:value="ADMIN">ADMIN</option>-->
+<!--                  </select>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--              <div class="row mb-3" hidden>-->
+<!--                <label class="col-sm-2 col-form-label">Avatar</label>-->
+<!--                <div class="col-sm-10">-->
+<!--                  <img id="thumbnail1" alt="Xem trước nội dung ảnh" class="img-fluid mb-5" width="200px" th:src="@{${userDto.imagePath}}"/>-->
+
+<!--                  <input class="form-control" type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail1(this)"-->
+<!--                         th:required="${userDto.avatar == null}"-->
+<!--                         accept="image/png, image/jpeg">-->
+<!--                </div>-->
+<!--                <input type="hidden" th:field="*{avatar}" />-->
+<!--              </div>-->
+
+<!--              <div class="row mb-3">-->
+<!--                <label class="col-sm-3 col-form-label"></label>-->
+<!--                <div class="col-sm-9">-->
+<!--                  <button type="submit" class="btn btn-primary">-->
+<!--                      Cập nhật-->
+<!--                  </button>-->
+<!--                </div>-->
+<!--              </div>-->
+
+<!--            </form>&lt;!&ndash; End General Form Elements &ndash;&gt;-->
+
+<!--          </div>-->
+<!--        </div>-->
+      </div>
+    </div>
+  </div>
+
+  <th:block th:replace="frontend/fragments/footer :: footer"></th:block>
+  <th:block th:replace="frontend/fragments/common :: script"></th:block>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    function showImageThumbnail1(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          document.getElementById('thumbnail1').setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function showImageThumbnail2(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          document.getElementById('thumbnail2').setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+  </script>
+</body>
+
+</html>

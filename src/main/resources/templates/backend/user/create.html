@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Người dùng')"></head>
+<style>
+ .error {
+   color: red;
+ }
+
+</style>
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Tabs</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/backend}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/backend/user}">Người dùng</a></li>
+        <li class="breadcrumb-item active"><a th:href="@{/backend/user/new}">Tạo mới</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{/backend/user/new}">Tạo mới</a>
+            </h5>
+            <!-- General Form Elements -->
+            <form th:action="@{/backend/user/save}" th:method="post" th:object="${userDto}" enctype="multipart/form-data">
+              <div class="row mb-3">
+                <div class="col-sm-10">
+                  <input hidden th:field="*{id}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="username" class="col-sm-2 col-form-label">Username</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="username" th:field="*{username}" required>
+                  <label th:if="${#fields.hasErrors('username')}" class="error" th:errors="*{username}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" th:if="*{id == null}">
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="password" th:field="*{password}" >
+                  <label th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" th:if="*{id == null}">
+                <label for="rePassword" class="col-sm-2 col-form-label">Re Password</label>
+                <div class="col-sm-10">
+                  <input type="password" class="form-control" id="rePassword" th:field="*{rePassword}">
+                  <label th:if="${#fields.hasErrors('rePassword')}" class="error" th:errors="*{rePassword}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" th:if="*{id != null}" hidden>
+                <label for="password" class="col-sm-2 col-form-label">Password</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="password" th:field="*{password}" >
+                  <label th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></label>
+                </div>
+              </div>
+              <div class="row mb-3" th:if="*{id != null}" hidden>
+                <label for="rePassword" class="col-sm-2 col-form-label">Re Password</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="rePassword" th:field="*{rePassword}">
+                  <label th:if="${#fields.hasErrors('rePassword')}" class="error" th:errors="*{rePassword}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="fullName" class="col-sm-2 col-form-label">Full name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="fullName" th:field="*{fullName}" required>
+                  <label th:if="${#fields.hasErrors('fullName')}" class="error" th:errors="*{fullName}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="address" class="col-sm-2 col-form-label">Address</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="address" th:field="*{address}" required>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="phone" class="col-sm-2 col-form-label">Phone</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="phone" th:field="*{phone}" required>
+                  <label th:if="${#fields.hasErrors('phone')}" class="error" th:errors="*{phone}"></label>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="email" class="col-sm-2 col-form-label">Email</label>
+                <div class="col-sm-10">
+                  <input type="email" class="form-control" id="email" th:field="*{email}" required>
+                  <label th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></label>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Trạng thái:</label>
+                <div class="col-sm-10">
+                  <select th:field="*{status}" class="form-control" required>
+                    <option th:value="true">Hoạt động</option>
+                    <option th:value="false">Tạm dừng</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Sex</label>
+                <div class="col-sm-10">
+                  <select th:field="*{sex}" class="form-control" required>
+                    <option th:value="1">Nam</option>
+                    <option th:value="0">Nữ</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Role</label>
+                <div class="col-sm-10">
+                  <select th:field="*{role}" class="form-control" required>
+                    <option th:value="USER">USER</option>
+                    <option th:value="ADMIN">ADMIN</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Avatar</label>
+                <div class="col-sm-10">
+                  <img id="thumbnail1" alt="Xem trước nội dung ảnh" class="img-fluid mb-5" width="200px" th:src="@{${userDto.imagePath}}"/>
+
+                  <input class="form-control" type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail1(this)"
+                         th:required="${userDto.avatar == null}"
+                         accept="image/png, image/jpeg">
+                </div>
+                <input type="hidden" th:field="*{avatar}" />
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">
+                    <th:block th:if="*{id == null}">
+                      Tạo mới
+                    </th:block>
+                    <th:block th:unless="*{id == null}">
+                      Cập nhật
+                    </th:block>
+                  </button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{/backend/user/new}">Cập nhật</a>
+            </h5>
+            <h5 class="text-danger mb-3">[[${message}]]</h5>
+            <h5 class="text-danger mb-3">[[${error}]]</h5>
+            <form th:action="@{/backend/user}">
+              <div class="row mb-3">
+                <label for="idName" class="col-sm-2 col-form-label">Nhập vào ID</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="idName" name="id">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+              </div>
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main><!-- End #main -->
+
+
+  <th:block th:replace="backend/fragments/footer :: footer"></th:block>
+  <th:block th:replace="backend/fragments/common :: script"></th:block>
+  <script>
+    function showImageThumbnail1(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          document.getElementById('thumbnail1').setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    function showImageThumbnail2(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          document.getElementById('thumbnail2').setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+  </script>
+</body>
+
+</html>

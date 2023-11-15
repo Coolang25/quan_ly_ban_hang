@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="content" th:remove="tag">
+	<style>
+		.extra-preview {
+			width: 100px;
+		}
+	</style>
+	<div class="row" id="divProductImages">
+		<div class="col border m-3 p-2">
+			<div><label>Ảnh chính: [[${productsDto.mainImage}]]</label></div>
+			<div class="m-2">
+				<img id="thumbnail" alt="Xem trước nội dung ảnh" class="img-fluid" width="100px"
+					th:src="@{${productsDto.mainImagePath}}"/>
+			</div>
+			<div>
+				<input type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail(this)"
+					th:required="${productsDto.mainImage == null}"
+					accept="image/png, image/jpeg" />
+			</div>
+			<input type="hidden" th:field="*{mainImage}" />
+		</div>
+
+		<th:block th:each="productImage, status : ${productsDto.images}">
+		<div class="col border m-3 p-2" th:id="'divExtraImage' + ${status.index}">
+			<div>
+				<label>Ảnh số #[[${status.index + 1}]]: [[${productImage.name}]]</label>
+				<a name="linkRemoveExtraImage"
+					class="btn fas fa-times-circle fa-2x icon-dark float-right text-danger"
+					title="Remove this image"></a>
+			</div>
+			<div class="m-2">
+				<img th:id="'extraThumbnail' + ${status.index}"
+					th:alt="'Ảnh số #' + ${status.index + 1} + ' preview'" class="img-fluid extra-preview"
+					th:src="@{${productImage.imagePath}}"/>
+			</div>
+			<div>
+				<input type="file" name="extraImage"
+					accept="image/png, image/jpeg" />
+			</div>
+
+			<input type="hidden" name="imageIDs" th:id="'imageId' + ${status.index}"
+				th:value="${productImage.id}" />
+			<input type="hidden" name="imageNames" th:id="'imageName' + ${status.index}"
+				th:value="${productImage.name}" />
+
+		</div>
+		</th:block>
+
+		<div class="col border m-3 p-2" th:id="'divExtraImage' + ${numberOfExistingExtraImages}">
+			<div th:id="'extraImageHeader' + ${numberOfExistingExtraImages}">
+				<label>Thêm ảnh:</label>
+			</div>
+			<div class="m-2">
+				<img th:id="'extraThumbnail' + ${numberOfExistingExtraImages}"
+					th:alt="'Extra image' + ${numberOfExistingExtraImages} + ' preview'" class="img-fluid extra-preview"
+					th:src="@{/images/image-thumbnail.png}"/>
+			</div>
+			<div>
+				<input type="file" name="extraImage"
+					accept="image/png, image/jpeg" />
+			</div>
+		</div>
+	</div>
+</div>
+
+<div th:fragment="script" th:remove="tag">
+	<script>
+		function showImageThumbnail(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+
+				reader.onload = function (e) {
+					document.getElementById('thumbnail').setAttribute('src', e.target.result);
+				}
+
+				reader.readAsDataURL(input.files[0]);
+			}
+		}
+
+	</script>
+
+	<script th:src="@{/backend/js/product_form_images.js}"></script>
+</div>
+</body>
+</html>

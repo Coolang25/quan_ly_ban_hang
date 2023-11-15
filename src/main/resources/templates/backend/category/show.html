@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Thể loại')"></head>
+
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Tabs</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/backend/category/new}">Trang chủ</a></li>
+        <li class="breadcrumb-item active"><a th:href="@{/backend/category}">Thể loại</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><a th:href="@{/backend/category}">Danh sách</a></h5>
+
+            <!-- Table with stripped rows -->
+            <table class="table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Image</th>
+                <th>Status</th>
+              </tr>
+              </thead>
+              <tbody>
+              <th:block th:each="category : ${listCategory}">
+                <tr>
+                  <td th:text="${category.id}"></td>
+                  <td th:text="${category.name}"></td>
+                  <td th:text="${category.image}"></td>
+                  <td th:text="${category.status}"></td>
+                </tr>
+              </th:block>
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title"><a th:href="@{/backend/category}">Tìm kiếm</a></h5>
+            <h5 class="text-danger">[[${notFound}]]</h5>
+            <form th:action="@{/backend/category}">
+              <div class="row mb-3">
+                <label for="idName" class="col-sm-2 col-form-label">Nhập vào tên</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="idName" name="name" placeholder="Nhập tên thể loại">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+
+
+<th:block th:replace="backend/fragments/footer :: footer"></th:block>
+<th:block th:replace="backend/fragments/common :: script"></th:block>
+<script>
+  function showImageThumbnail(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        document.getElementById('thumbnail').setAttribute('src', e.target.result);
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+</script>
+
+</body>
+
+</html>

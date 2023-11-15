@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="frontend/fragments/common :: head('Đơn hàng')"></head>
+
+<body>
+    <th:block th:replace="frontend/fragments/header :: header"></th:block>
+    <div class="container-fluid pt-5">
+        <!-- Page Header Start -->
+        <div class="container-fluid bg-secondary mb-5">
+            <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 150px">
+                <h1 class="font-weight-semi-bold text-uppercase mb-3">Đơn hàng của bạn</h1>
+                <div class="d-inline-flex">
+                    <p class="m-0"><a th:href="@{/}">Home</a></p>
+                    <p class="m-0 px-2">-</p>
+                    <p class="m-0"><a th:href="@{/bill}">Đơn hàng</a></p>
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+        <div class="table-responsive mb-5">
+            <div th:each="bill : ${billDtos}">
+                <hr class="my-4">
+                <div class="d-flex justify-content-center">
+                    <div class="col-4 text-danger justify-content-center">
+                        <p th:if="${bill.status == 0}">Đơn hàng thất bại</p>
+                        <p th:if="${bill.status == 1}">Đơn hàng đang chờ xác nhận</p>
+                        <p th:if="${bill.status == 2}">Đang giao hàng</p>
+                        <p th:if="${bill.status == 3}">Giao hàng thành công</p>
+                    </div>
+                    <div class="col-4 text-danger justify-content-center">
+                        <p>Thành tiền: [[${#numbers.formatDecimal(bill.totalPrice, 1, 'COMMA', 0, 'POINT')}]]</p>
+                    </div>
+                    <div class="col-4 text-danger justify-content-center">
+                        <p>Ngày mua [[${#dates.format(bill.createdTime, 'dd/MM/yyyy HH:mm:ss')}]]</p>
+                    </div>
+                </div>
+                <th:block th:each="item : ${bill.orderedItemDtos}">
+                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                            <img th:src="@{${item.productDto.mainImagePath}}"
+                                 class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                            <h6 class="text-muted">[[${item.productDto.name}]]</h6>
+                            <h6 class="text-black mb-0">Size: [[${item.sizeName}]]</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-2 text-center">
+                            <h6 class="text-black mb-0">Số lượng:[[${item.quantity}]]</h6>
+                        </div>
+                        <div class="col-md-3 col-lg-2 col-xl-2 text-center text-end">
+                            <h6 class="mb-0" th:text="${#numbers.formatDecimal(item.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
+                        </div>
+                    </div>
+                </th:block>
+            </div>
+
+            <hr class="my-4">
+        </div>
+    </div>
+
+    <th:block th:replace="frontend/fragments/footer :: footer"></th:block>
+    <th:block th:replace="frontend/fragments/common :: script"></th:block>
+
+</body>
+
+</html>

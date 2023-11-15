@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="frontend/fragments/common :: head('Chi tiết')"></head>
+
+<body>
+<th:block th:replace="frontend/fragments/header :: header"></th:block>
+
+
+<!-- Page Header Start -->
+<th:block th:if="${productsByBrand}">
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Mua sắm</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/">Trang chủ</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0"><a href="/shop">Mua sắm</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Thương hiệu</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:if="${productsByCategory}">
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Mua sắm</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/">Trang chủ</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0"><a href="/shop">Mua sắm</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Thể loại</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:if="${products}">
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Mua sắm</h1>
+            <div class="d-inline-flex">
+                <p class="m-0"><a href="/">Trang chủ</a></p>
+                <p class="m-0 px-2">-</p>
+                <p class="m-0">Mua sắm</p>
+            </div>
+        </div>
+    </div>
+</th:block>
+
+<th:block th:if="${notification}">
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">Mua sắm</h1>
+        </div>
+    </div>
+</th:block>
+
+<!-- Page Header End -->
+
+
+<!-- Shop Start -->
+<div class="container-fluid pt-5">
+    <th:block th:if="${products}">
+        <form name="myForm1" id="myForm1" th:action="@{/shop}" th:object="${filter1}" method="get">
+            <div class="row px-xl-5">
+                <!-- Shop Sidebar Start -->
+                <div class="col-lg-3 col-md-12">
+                    <!-- Price Start -->
+                    <div class="border-bottom mb-4 pb-4">
+                        <h5 class="font-weight-semi-bold mb-4">Lọc theo giá</h5>
+                        <div>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel1('level')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel1('level 1')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Dưới 5 trăm nghìn
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel1('level 2')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 5 trăm - 1 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel1('level 3')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 1 triệu - 3 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel1('level 4')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Trên 3 triệu
+                                </label>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Price End -->
+                </div>
+                <!-- Shop Sidebar End -->
+
+
+                <!-- Shop Product Start -->
+                <div class="col-lg-9 col-md-12">
+                    <div class="row pb-3">
+                        <div class="col-12 pb-1">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" th:field="*{keyWord}" placeholder="Tìm kiếm">
+                                            <button class="input-group-append" type="button" onclick="updateKeyWord1()">
+                                                <span class="input-group-text bg-transparent text-primary">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown ml-4">
+                                        <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Sắp xếp
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy1('latest')">
+                                                Mới nhất
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy1('asc')">
+                                                Giá từ thấp đến cao
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy1('desc')">
+                                                Giá từ cao đến thấp
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <th:block th:each="(product : ${products})">
+                            <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                        <img class="img-fluid w-100" th:src="@{'/image-storage/product/' + ${product.id} + '/' + ${product.mainImage}}" alt="">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">[[${product.name}]]</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <h6 th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')}"></h6><h6 class="text-muted ml-2"><del></del></h6>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <a th:href="@{'/detail/' + ${product.id}}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Chi tiết sản phẩm</a>
+                                        <p class="btn btn-sm text-dark p-0">Đã bán được [[${product.sold}]] sản phẩm</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${notification}">
+                            <div class="container-fluid mb-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <h1 class="font-weight-semi-bold text-danger mb-3">Không tìm thấy sản phẩm</h1>
+                                </div>
+                            </div>
+                        </th:block>
+
+
+                        <div class="col-12 pb-1">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-3">
+                                    <li th:if="${currentPage > 1}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Previous" th:onclick="|updatePage1(${currentPage - 1})|">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </button>
+                                    </li>
+                                    <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item" th:classappend="${currentPage == i ? 'active' : ''}"><button type="button" class="page-link" th:onclick="|updatePage1(${i})|">[[${i}]]</button></li>
+                                    <li th:if="${currentPage < totalPage}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Next" th:onclick="|updatePage1(${currentPage + 1})|">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div hidden>
+                            <input type="text" th:field="*{priceLevel}" id="priceLevel1">
+                            <input type="text" th:field="*{sortBy}" id="sortBy1">
+                            <input type="text" th:field="*{page}" id="page1">
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Product End -->
+            </div>
+
+        </form>
+    </th:block>
+
+    <th:block th:if="${productsByCategory}">
+        <form name="myForm2" id="myForm2" th:action="@{'/shop/category/' + ${categoryId}}" th:object="${filter2}" method="get">
+            <div class="row px-xl-5">
+                <!-- Shop Sidebar Start -->
+                <div class="col-lg-3 col-md-12">
+                    <!-- Price Start -->
+                    <div class="border-bottom mb-4 pb-4">
+                        <h5 class="font-weight-semi-bold mb-4">Lọc theo giá</h5>
+                        <div>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel2('level')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel2('level 1')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Dưới 5 trăm nghìn
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel2('level 2')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 5 trăm - 1 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel2('level 3')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 1 triệu - 3 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel2('level 4')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Trên 3 triệu
+                                </label>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Price End -->
+                </div>
+                <!-- Shop Sidebar End -->
+
+
+                <!-- Shop Product Start -->
+                <div class="col-lg-9 col-md-12">
+                    <div class="row pb-3">
+                        <div class="col-12 pb-1">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" th:field="*{keyWord}" placeholder="Tìm kiếm">
+                                            <button class="input-group-append" type="button" onclick="updateKeyWord2()">
+                                                <span class="input-group-text bg-transparent text-primary">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown ml-4">
+                                        <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Sắp xếp
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy2('latest')">
+                                                Mới nhất
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy2('asc')">
+                                                Giá từ thấp đến cao
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy2('desc')">
+                                                Giá từ cao đến thấp
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <th:block th:each="(product : ${productsByCategory})">
+                            <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                        <img class="img-fluid w-100" th:src="@{'/image-storage/product/' + ${product.id} + '/' + ${product.mainImage}}" alt="">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">[[${product.name}]]</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <h6 th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')}"></h6><h6 class="text-muted ml-2"><del></del></h6>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <a th:href="@{'/detail/' + ${product.id}}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Chi tiết sản phẩm</a>
+                                        <p class="btn btn-sm text-dark p-0">Đã bán được [[${product.sold}]] sản phẩm</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${notification}">
+                            <div class="container-fluid mb-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <h1 class="font-weight-semi-bold text-danger mb-3">Không tìm thấy sản phẩm</h1>
+                                </div>
+                            </div>
+                        </th:block>
+
+
+                        <div class="col-12 pb-1">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-3">
+                                    <li th:if="${currentPage > 1}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Previous" th:onclick="|updatePage2(${currentPage - 1})|">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </button>
+                                    </li>
+                                    <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item" th:classappend="${currentPage == i ? 'active' : ''}"><button type="button" class="page-link" th:onclick="|updatePage2(${i})|">[[${i}]]</button></li>
+                                    <li th:if="${currentPage < totalPage}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Next" th:onclick="|updatePage2(${currentPage + 1})|">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div hidden>
+                            <input type="text" th:field="*{priceLevel}" id="priceLevel2">
+                            <input type="text" th:field="*{sortBy}" id="sortBy2">
+                            <input type="text" th:field="*{page}" id="page2">
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Product End -->
+            </div>
+
+        </form>
+    </th:block>
+
+    <th:block th:if="${productsByBrand}">
+        <form name="myForm3" id="myForm3" th:action="@{'/shop/brand/' + ${brandId}}" th:object="${filter3}" method="get">
+            <div class="row px-xl-5">
+                <!-- Shop Sidebar Start -->
+                <div class="col-lg-3 col-md-12">
+                    <!-- Price Start -->
+                    <div class="border-bottom mb-4 pb-4">
+                        <h5 class="font-weight-semi-bold mb-4">Lọc theo giá</h5>
+                        <div>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel3('level')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Tất cả
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel3('level 1')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Dưới 5 trăm nghìn
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel3('level 2')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 5 trăm - 1 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel3('level 3')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Từ 1 triệu - 3 triệu
+                                </label>
+                            </button>
+                            <button class="form-check mb-3" type="button" onclick="updatePriceLevel3('level 4')" style="min-width: 175px">
+                                <label class="form-check-label">
+                                    Trên 3 triệu
+                                </label>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Price End -->
+                </div>
+                <!-- Shop Sidebar End -->
+
+
+                <!-- Shop Product Start -->
+                <div class="col-lg-9 col-md-12">
+                    <div class="row pb-3">
+                        <div class="col-12 pb-1">
+                            <div>
+                                <div class="d-flex align-items-center justify-content-between mb-4">
+                                    <div>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" th:field="*{keyWord}" placeholder="Tìm kiếm">
+                                            <button class="input-group-append" type="button" onclick="updateKeyWord3()">
+                                                <span class="input-group-text bg-transparent text-primary">
+                                                    <i class="fa fa-search"></i>
+                                                </span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="dropdown ml-4">
+                                        <button class="btn border dropdown-toggle" type="button" id="triggerId" data-toggle="dropdown" aria-haspopup="true"
+                                                aria-expanded="false">
+                                            Sắp xếp
+                                        </button>
+
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="triggerId">
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy3('latest')">
+                                                Mới nhất
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy3('asc')">
+                                                Giá từ thấp đến cao
+                                            </button>
+                                            <button class="dropdown-item" type="button" onclick="updateSortBy3('desc')">
+                                                Giá từ cao đến thấp
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <th:block th:each="(product : ${productsByBrand})">
+                            <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                                <div class="card product-item border-0 mb-4">
+                                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                                        <img class="img-fluid w-100" th:src="@{'/image-storage/product/' + ${product.id} + '/' + ${product.mainImage}}" alt="">
+                                    </div>
+                                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                                        <h6 class="text-truncate mb-3">[[${product.name}]]</h6>
+                                        <div class="d-flex justify-content-center">
+                                            <h6 th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')}"></h6><h6 class="text-muted ml-2"><del></del></h6>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer d-flex justify-content-between bg-light border">
+                                        <a th:href="@{'/detail/' + ${product.id}}" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>Chi tiết sản phẩm</a>
+                                        <p class="btn btn-sm text-dark p-0">Đã bán được [[${product.sold}]] sản phẩm</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${notification}">
+                            <div class="container-fluid mb-5">
+                                <div class="d-flex flex-column align-items-center justify-content-center">
+                                    <h1 class="font-weight-semi-bold text-danger mb-3">Không tìm thấy sản phẩm</h1>
+                                </div>
+                            </div>
+                        </th:block>
+
+
+                        <div class="col-12 pb-1">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-3">
+                                    <li th:if="${currentPage > 1}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Previous" th:onclick="|updatePage3(${currentPage - 1})|">
+                                            <span aria-hidden="true">&laquo;</span>
+                                            <span class="sr-only">Previous</span>
+                                        </button>
+                                    </li>
+                                    <li th:each="i : ${#numbers.sequence(1, totalPage)}" class="page-item" th:classappend="${currentPage == i ? 'active' : ''}"><button type="button" class="page-link" th:onclick="|updatePage3(${i})|">[[${i}]]</button></li>
+                                    <li th:if="${currentPage < totalPage}" class="page-item">
+                                        <button type="button" class="page-link" aria-label="Next" th:onclick="|updatePage3(${currentPage + 1})|">
+                                            <span aria-hidden="true">&raquo;</span>
+                                            <span class="sr-only">Next</span>
+                                        </button>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div hidden>
+                            <input type="text" th:field="*{priceLevel}" id="priceLevel3">
+                            <input type="text" th:field="*{sortBy}" id="sortBy3">
+                            <input type="text" th:field="*{page}" id="page3">
+                        </div>
+                    </div>
+                </div>
+                <!-- Shop Product End -->
+            </div>
+
+        </form>
+    </th:block>
+
+</div>
+<!-- Shop End -->
+
+
+<th:block th:replace="frontend/fragments/footer :: footer"></th:block>
+<th:block th:replace="frontend/fragments/common :: script"></th:block>
+
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script th:inline="javascript">
+    function updatePage1(page) {
+        var pageInput = document.getElementById('page1');
+        pageInput.value = page;
+
+        submitForm1();
+    }
+
+    function updateSortBy1(str) {
+        var sortByInput = document.getElementById('sortBy1');
+        sortByInput.value = str;
+        updatePage1(1);
+        submitForm1();
+    }
+
+    function updatePriceLevel1(str) {
+        var pageInput = document.getElementById('priceLevel1');
+        pageInput.value = str;
+        updatePage1(1);
+        submitForm1();
+    }
+
+    function updateKeyWord1() {
+        updatePage1(1);
+        submitForm1();
+    }
+
+    function submitForm1() {
+        document.forms["myForm1"].submit();
+    }
+    function updatePage2(page) {
+        var pageInput = document.getElementById('page2');
+        pageInput.value = page;
+
+        submitForm2();
+    }
+
+    function updateSortBy2(str) {
+        var sortByInput = document.getElementById('sortBy2');
+        sortByInput.value = str;
+        updatePage2(1);
+        submitForm2();
+    }
+
+    function updatePriceLevel2(str) {
+        var pageInput = document.getElementById('priceLevel2');
+        pageInput.value = str;
+        updatePage2(1);
+        submitForm2();
+    }
+
+    function updateKeyWord2() {
+        updatePage2(1);
+        submitForm2();
+    }
+
+    function submitForm2() {
+        document.forms["myForm2"].submit();
+    }
+
+    function updatePage3(page) {
+        var pageInput = document.getElementById('page3');
+        pageInput.value = page;
+
+        submitForm3();
+    }
+
+    function updateSortBy3(str) {
+        var sortByInput = document.getElementById('sortBy3');
+        sortByInput.value = str;
+        updatePage3(1);
+        submitForm3();
+    }
+
+    function updatePriceLevel3(str) {
+        var pageInput = document.getElementById('priceLevel3');
+        pageInput.value = str;
+        updatePage3(1);
+        submitForm3();
+    }
+
+    function updateKeyWord3() {
+        updatePage3(1);
+        submitForm3();
+    }
+
+    function submitForm3() {
+        document.forms["myForm3"].submit();
+    }
+</script>
+</body>
+
+</html>

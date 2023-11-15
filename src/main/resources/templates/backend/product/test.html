@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:action="@{/backend/product/save}" th:method="post" enctype="multipart/form-data">
+    <div th:each="i: ${test}">
+        <input type="text" name="productSizeIDs" th:field="${i.id}">
+    </div>
+    <div>
+        <label class="col-sm-5 col-form-label"></label>
+        <div class="col-sm-7">
+            <button type="submit" class="btn btn-primary">
+                    Cập nhật
+            </button>
+        </div>
+    </div>
+</form>
+</body>
+</html>

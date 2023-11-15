@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Thể loại')"></head>
+
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+<main id="main" class="main">
+
+  <div class="pagetitle">
+    <h1>Tabs</h1>
+    <nav>
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/backend}">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/backend/category}">Thể loại</a></li>
+        <li class="breadcrumb-item active"><a th:href="@{/backend/category/new}">Tạo mới</a></li>
+      </ol>
+    </nav>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-6">
+
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{/backend/category/new}">Tạo mới</a>
+            </h5>
+            <!-- General Form Elements -->
+            <form th:action="@{/backend/category/save}" th:method="post" th:object="${newCategory}" enctype="multipart/form-data">
+              <div class="row mb-3">
+                <div class="col-sm-10">
+                  <input hidden th:field="*{id}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="name" th:field="*{name}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Trạng thái</label>
+                <div class="col-sm-10">
+                  <select th:field="*{status}" class="form-control" required>
+                    <option th:value="true">Hoạt động</option>
+                    <option th:value="false">Tạm dừng</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                  <img id="thumbnail1" alt="Xem trước nội dung ảnh" class="img-fluid mb-5" width="200px" th:src="@{${newCategory.imagePath}}"/>
+
+                  <input class="form-control" type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail1(this)"
+                         th:required="${newCategory.image == null}"
+                         accept="image/png, image/jpeg">
+                </div>
+                <input type="hidden" th:field="*{image}" />
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">
+                    <th:block th:if="*{id == null}">
+                      Tạo mới
+                    </th:block>
+                    <th:block th:unless="*{id == null}">
+                      Cập nhật
+                    </th:block>
+                  </button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-lg-6">
+
+        <div th:if="${categoryById}" class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{/backend/category/new}">Cập nhật</a>
+            </h5>
+            <h5 class="text-danger">[[${message}]]</h5>
+            <!-- General Form Elements -->
+            <form th:action="@{/backend/category/save}" th:method="post" th:object="${categoryById}" enctype="multipart/form-data">
+              <div class="row mb-3">
+                <div class="col-sm-10">
+                  <input hidden th:field="*{id}">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="name" th:field="*{name}">
+                </div>
+              </div>
+              <div class="form-group row mb-3">
+                <label class="col-sm-2 col-form-label">Trạng thái</label>
+                <div class="col-sm-10">
+                  <select th:field="*{status}" class="form-control" required>
+                    <option th:value="true">Hoạt động</option>
+                    <option th:value="false">Tạm dừng</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label">Image</label>
+                <div class="col-sm-10">
+                  <img id="thumbnail2" alt="Xem trước nội dung ảnh" class="img-fluid mb-5" width="200px" th:src="@{${categoryById.imagePath}}"/>
+
+                  <input class="form-control" type="file" id="fileImage" name="fileImage" onchange="showImageThumbnail2(this)"
+                         th:required="${categoryById.image == null}"
+                         accept="image/png, image/jpeg">
+                </div>
+                <input type="hidden" th:field="*{image}" />
+              </div>
+
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">
+                    <th:block th:if="*{id == null}">
+                      Tạo mới
+                    </th:block>
+                    <th:block th:unless="*{id == null}">
+                      Cập nhật
+                    </th:block>
+                  </button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+        <div th:unless="${categoryById}" class="card">
+          <div class="card-body">
+            <h5 class="card-title">
+              <a th:href="@{/backend/category}">Cập nhật</a>
+            </h5>
+            <h5 class="text-danger mb-3">[[${message}]]</h5>
+            <h5 class="text-danger mb-3">[[${error}]]</h5>
+            <form th:action="@{/backend/category}">
+              <div class="row mb-3">
+                <label for="idName" class="col-sm-2 col-form-label">Nhập vào ID</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" id="idName" name="id">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                  <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                </div>
+              </div>
+
+            </form><!-- End General Form Elements -->
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+
+
+  <th:block th:replace="backend/fragments/footer :: footer"></th:block>
+  <th:block th:replace="backend/fragments/common :: script"></th:block>
+<script>
+  function showImageThumbnail1(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        document.getElementById('thumbnail1').setAttribute('src', e.target.result);
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  function showImageThumbnail2(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        document.getElementById('thumbnail2').setAttribute('src', e.target.result);
+      }
+
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+</script>
+
+</body>
+
+</html>

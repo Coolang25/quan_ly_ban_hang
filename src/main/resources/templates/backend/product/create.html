@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="backend/fragments/common :: head('Sản phẩm')">
+    </head>
+    <body>
+        <th:block th:replace="backend/fragments/header :: header"></th:block>
+        <main id="main" class="main">
+            <div class="pagetitle row">
+                <div class="col-lg-8">
+                    <h1>Tabs</h1>
+                    <nav>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/backend}">Trang chủ</a></li>
+                            <li class="breadcrumb-item"><a th:href="@{/backend/product}">Sản phẩm</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/backend/product/new}">Tạo mới</a></li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-4">
+                    <form th:action="@{/backend/product}">
+                        <div class="row mb-3">
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="idName" name="id" placeholder="Nhập vào ID sản phẩm cần cập nhật">
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                            </div>
+                        </div>
+                        <h5 style="color: red" th:text="${notFound}"></h5>
+                        <h5 style="color: red" th:text="${error}"></h5>
+                    </form>
+                </div>
+            </div><!-- End Page Title -->
+
+            <div>
+                <section class="section">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title col-lg-6"><a th:href="@{/backend/product/new}">Thêm mới</a></h5>
+                                    <h5 style="color: red" th:text="${message}"></h5>
+
+                                    <form th:action="@{/backend/product/save}" th:object="${productsDto}" th:method="post" enctype="multipart/form-data">
+                                        <!-- Default Tabs -->
+                                        <input hidden th:field="*{id}"/>
+                                        <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#common" type="button" role="tab" aria-controls="common" aria-selected="true">Thông tin chung</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="image-tab" data-bs-toggle="tab" data-bs-target="#upload-image" type="button" role="tab" aria-controls="upload-image" aria-selected="false">Upload ảnh</button>
+                                            </li>
+                                            <li class="nav-item" role="presentation">
+                                                <button class="nav-link" id="size-tab" data-bs-toggle="tab" data-bs-target="#size" type="button" role="tab" aria-controls="size" aria-selected="false">Size</button>
+                                            </li>
+                                        </ul>
+                                        <div class="tab-content pt-2" id="myTabContent">
+                                            <div class="tab-pane fade show active" id="common" role="tabpanel" aria-labelledby="home-tab">
+                                                <div th:replace="backend/product/product_info :: content"></div>
+                                            </div>
+                                            <div class="tab-pane fade" id="upload-image" role="tabpanel" aria-labelledby="profile-tab">
+                                                <div th:replace="backend/product/product_images :: content"></div>
+                                            </div>
+                                            <div class="tab-pane fade" id="size" role="tabpanel" aria-labelledby="contact-tab">
+                                                <div th:replace="backend/product/product_size :: content"></div>
+                                            </div>
+                                        </div><!-- End Default Tabs -->
+                                        <div class="row mb-3">
+                                            <label class="col-sm-5 col-form-label"></label>
+                                            <div class="col-sm-7">
+                                                <button type="submit" class="btn btn-primary">
+                                                    <th:block th:if="*{id == null}">
+                                                        Tạo mới
+                                                    </th:block>
+                                                    <th:block th:unless="*{id == null}">
+                                                        Cập nhật
+                                                    </th:block>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </main><!-- End #main -->
+        <th:block th:replace="backend/fragments/footer :: footer"></th:block>
+        <th:block th:replace="backend/fragments/common :: script"></th:block>
+        <th:block th:replace="backend/product/product_images :: script"></th:block>
+        <th:block th:replace="backend/product/product_size :: script"></th:block>
+    </body>
+</html>
+

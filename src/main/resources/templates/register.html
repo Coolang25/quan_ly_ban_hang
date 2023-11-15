@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+</head>
+
+<body>
+  <style>
+    .gradient-custom {
+      /* fallback for old browsers */
+      background: #f093fb;
+
+      /* Chrome 10-25, Safari 5.1-6 */
+      background: -webkit-linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1));
+
+      /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+      background: linear-gradient(to bottom right, rgba(240, 147, 251, 1), rgba(245, 87, 108, 1))
+    }
+
+    .card-registration .select-input.form-control[readonly]:not([disabled]) {
+      font-size: 1rem;
+      line-height: 2.15;
+      padding-left: .75em;
+      padding-right: .75em;
+    }
+    .card-registration .select-arrow {
+      top: 13px;
+    }
+     .error {
+       color: red;
+     }
+  </style>
+  <main>
+    <div class="container">
+      <section class="vh-100 gradient-custom">
+        <div class="container py-5 h-100">
+          <div class="row justify-content-center align-items-center h-100">
+            <div class="col-12 col-lg-9 col-xl-7">
+              <div class="card shadow-2-strong card-registration" style="border-radius: 15px;">
+                <div class="card-body p-4 p-md-5">
+                  <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Đăng ký</h3>
+                  <h5 class="text-danger">[[${message}]]</h5>
+                  <form th:action="@{/register/save}" th:method="post" th:object="${userDto}" enctype="multipart/form-data">
+                    <div class="row">
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <input type="text" id="username" class="form-control form-control-lg" th:field="*{username}" required/>
+                          <label class="form-label" for="username">Username</label>
+                          <label th:if="${#fields.hasErrors('username')}" class="error" th:errors="*{username}"></label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <input type="password" id="password" class="form-control form-control-lg" th:field="*{password}" required/>
+                          <label class="form-label" for="password">Password</label>
+                          <label th:if="${#fields.hasErrors('password')}" class="error" th:errors="*{password}"></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-4 d-flex align-items-center">
+                        <div class="form-outline datepicker w-100">
+                          <input type="text" class="form-control form-control-lg" id="fullName" th:field="*{fullName}" required/>
+                          <label for="fullName" class="form-label">Full name</label>
+                          <label th:if="${#fields.hasErrors('fullName')}" class="error" th:errors="*{fullName}"></label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-4">
+                        <div class="form-outline">
+                          <input type="password" id="repassword" class="form-control form-control-lg" th:field="*{rePassword}" required/>
+                          <label class="form-label" for="repassword">Re Password</label>
+                          <label th:if="${#fields.hasErrors('rePassword')}" class="error" th:errors="*{rePassword}"></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                          <input type="text" id="address" class="form-control form-control-lg" th:field="*{address}" required/>
+                          <label class="form-label" for="address">Address</label>
+                        </div>
+                      </div>
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="col-md-6 mb-4">
+                          <h6 class="mb-2 pb-1">Gender: </h6>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="femaleGender" th:field="*{sex}" th:value="0" checked />
+                            <label class="form-check-label" for="femaleGender">Nữ</label>
+                          </div>
+                          <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" id="maleGender" th:field="*{sex}" th:value="1" />
+                            <label class="form-check-label" for="maleGender">Nam</label>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                          <input type="text" id="phone" class="form-control form-control-lg" th:field="*{phone}" required/>
+                          <label class="form-label" for="phone">Phone</label>
+                          <label th:if="${#fields.hasErrors('phone')}" class="error" th:errors="*{phone}"></label>
+                        </div>
+                      </div>
+
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="form-outline">
+                          <input type="email" id="email" class="form-control form-control-lg" th:field="*{email}" required/>
+                          <label class="form-label" for="email">Email</label>
+                          <label th:if="${#fields.hasErrors('email')}" class="error" th:errors="*{email}"></label>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row" hidden>
+                      <div class="col-md-6 mb-4 pb-2">
+                        <input th:value="true" th:field="*{status}" hidden>
+                      </div>
+
+                      <div class="col-md-6 mb-4 pb-2">
+                        <div class="col-md-6 mb-4 pb-2">
+                          <input th:value="USER" th:field="*{role}" hidden="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="mt-4 pt-2 text-center">
+                      <input class="btn btn-primary btn-lg" type="submit" value="Đăng ký" />
+                    </div>
+
+                    <div>
+                      <p class="mb-0 mt-3 text-center">Về trang đăng nhập <a th:href="@{/login}" class="text-black-50">Đăng nhập</a></p>
+                    </div>
+
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main><!-- End #main -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+  <script>
+    function showImageThumbnail(input) {
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          document.getElementById('thumbnail').setAttribute('src', e.target.result);
+        }
+
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+  </script>
+</body>
+
+</html>

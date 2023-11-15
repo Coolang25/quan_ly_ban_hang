@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Size')"></head>
+
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+<main id="main" class="main">
+    <div class="pagetitle">
+        <h1>Tabs</h1>
+        <nav>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a th:href="@{/backend}">Trang chủ</a></li>
+                <li class="breadcrumb-item active"><a th:href="@{/backend/brand}">Size</a></li>
+            </ol>
+        </nav>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-2">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title"><a th:href="@{/backend/size}">Danh sách</a></h5>
+
+                        <!-- Table with stripped rows -->
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <th:block th:each="size : ${listSize}">
+                                <tr>
+                                    <td th:text="${size.id}"></td>
+                                    <td th:text="${size.name}"></td>
+                                    <td th:text="${size.status}"></td>
+                                </tr>
+                            </th:block>
+                            </tbody>
+                        </table>
+                        <!-- End Table with stripped rows -->
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-5">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/backend/size}">Tạo mới</a>
+                        </h5>
+                        <!-- General Form Elements -->
+                        <form th:action="@{/backend/size/save}" th:method="post" th:object="${newSize}" enctype="multipart/form-data">
+                            <div class="row mb-3">
+                                <div class="col-sm-9">
+                                    <input hidden th:field="*{id}">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="name" class="col-sm-3 col-form-label">Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label class="col-sm-3 col-form-label">Trạng thái:</label>
+                                <div class="col-sm-9">
+                                    <select th:field="*{status}" class="form-control" required>
+                                        <option th:value="true">Hoạt động</option>
+                                        <option th:value="false">Tạm dừng</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-primary">
+                                        <th:block th:if="*{id == null}">
+                                            Tạo mới
+                                        </th:block>
+                                        <th:block th:unless="*{id == null}">
+                                            Cập nhật
+                                        </th:block>
+                                    </button>
+                                </div>
+                            </div>
+
+                        </form><!-- End General Form Elements -->
+
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-lg-5">
+
+                <div th:if="${sizeById}" class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/backend/size}">Cập nhật</a>
+                        </h5>
+                        <h5 class="text-danger">[[${message}]]</h5>
+                        <!-- General Form Elements -->
+                        <form th:action="@{/backend/size/save}" th:method="post" th:object="${sizeById}" enctype="multipart/form-data">
+                            <div class="row mb-3">
+                                <div class="col-sm-9">
+                                    <input hidden th:field="*{id}">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label for="name" class="col-sm-3 col-form-label">Name</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="name" th:field="*{name}">
+                                </div>
+                            </div>
+                            <div class="form-group row mb-3">
+                                <label class="col-sm-3 col-form-label">Trạng thái</label>
+                                <div class="col-sm-9">
+                                    <select th:field="*{status}" class="form-control" required>
+                                        <option th:value="true">Hoạt động</option>
+                                        <option th:value="false">Tạm dừng</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-primary">
+                                        <th:block th:if="*{id == null}">
+                                            Tạo mới
+                                        </th:block>
+                                        <th:block th:unless="*{id == null}">
+                                            Cập nhật
+                                        </th:block>
+                                    </button>
+                                </div>
+                            </div>
+                        </form><!-- End General Form Elements -->
+
+                    </div>
+                </div>
+
+                <div th:unless="${sizeById}" class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a th:href="@{/backend/size}">Cập nhật</a>
+                        </h5>
+                        <h5 class="text-danger mb-3">[[${message}]]</h5>
+                        <h5 class="text-danger mb-3">[[${error}]]</h5>
+                        <form th:action="@{/backend/size}">
+                            <div class="row mb-3">
+                                <label for="idName" class="col-sm-3 col-form-label">Nhập vào ID</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="idName" name="id">
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <label class="col-sm-3 col-form-label"></label>
+                                <div class="col-sm-9">
+                                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                                </div>
+                            </div>
+                        </form><!-- End General Form Elements -->
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+
+<th:block th:replace="backend/fragments/footer :: footer"></th:block>
+<th:block th:replace="backend/fragments/common :: script"></th:block>
+
+</body>
+
+</html>

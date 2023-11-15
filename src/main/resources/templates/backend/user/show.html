@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Người dùng')"></head>
+
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+<main id="main" class="main">
+
+  <div class="pagetitle row">
+    <div class="col-lg-8">
+      <h1>Tabs</h1>
+      <nav>
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a th:href="@{/backend}">Trang chủ</a></li>
+          <li class="breadcrumb-item active"><a th:href="@{/backend/user}">Người dùng</a></li>
+        </ol>
+      </nav>
+    </div>
+    <div class="col-lg-4">
+      <form th:action="@{/backend/user}">
+        <div class="row mb-3">
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="idName" name="name" placeholder="Tên người dùng">
+          </div>
+          <div class="col-sm-3">
+            <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+          </div>
+        </div>
+        <h5 style="color: red" th:text="${notFound}"></h5>
+      </form>
+    </div>
+  </div><!-- End Page Title -->
+
+  <section class="section">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title col-lg-6"><a th:href="@{/backend/user}">Danh sách</a></h5>
+            <!-- Table with stripped rows -->
+            <table class="table">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Password</th>
+                <th>Full name</th>
+                <th>Address</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Sex</th>
+                <th>Role</th>
+                <th>Avatar</th>
+              </tr>
+              </thead>
+              <tbody>
+              <th:block th:each="user : ${listUser}">
+                <tr>
+                  <td th:text="${user.id}"></td>
+                  <td th:text="${user.username}"></td>
+                  <td th:text="${user.password}"></td>
+                  <td th:text="${user.fullName}"></td>
+                  <td th:text="${user.address}"></td>
+                  <td th:text="${user.phone}"></td>
+                  <td th:text="${user.email}"></td>
+                  <td th:text="${user.status}"></td>
+                  <td th:text="${user.sex}"></td>
+                  <td th:text="${user.role}"></td>
+                  <td th:text="${user.avatar}"></td>
+                </tr>
+              </th:block>
+              </tbody>
+            </table>
+            <!-- End Table with stripped rows -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main><!-- End #main -->
+
+
+<th:block th:replace="backend/fragments/footer :: footer"></th:block>
+<th:block th:replace="backend/fragments/common :: script"></th:block>
+
+</body>
+
+</html>

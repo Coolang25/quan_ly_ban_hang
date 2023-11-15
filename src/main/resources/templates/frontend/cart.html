@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head th:replace="frontend/fragments/common :: head('Giỏ hàng')"></head>
+
+<body>
+    <th:block th:replace="frontend/fragments/header :: header"></th:block>
+
+    <!-- Cart Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <div th:each="cartItem : ${cartItems}">
+                    <hr class="my-4">
+                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                        <div class="col-md-1 col-lg-1 col-xl-1 text-center">
+                            <input type="checkbox" name="cartItemId" class="form-check-input-lg checkbox" th:value="${cartItem.id}">
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-xl-2 text-center">
+                            <img th:src="@{${cartItem.productDto.mainImagePath}}"
+                                 class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                            <h6 class="text-muted">[[${cartItem.productDto.name}]]</h6>
+                            <h6 class="text-black mb-0">Size: [[${cartItem.sizeName}]]</h6>
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-xl-1 text-center">
+                            <input id="quantity" min="0" name="quantities" th:value="${cartItem.intendedQuantity}" type="number"
+                                   class="form-control form-control-sm text-center quantity" th:max="${cartItem.inStock}"/>
+                        </div>
+                        <div class="col-md-2 col-lg-1 col-xl-1 text-center">
+                            <input class="price" th:value="${cartItem.productDto.price}" hidden>
+                            <h6 class="mb-0" th:text="${#numbers.formatDecimal(cartItem.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
+                        </div>
+                        <div class="col-md-2 col-lg-2 col-xl-2 text-end text-center">
+                            <p th:if="${cartItem.status == true}">Chưa mua</p>
+                            <p th:unless="${cartItem.status == true}">Đã mua</p>
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="my-4">
+            </div>
+
+
+
+            <div class="col-lg-4">
+                <div class="card border-secondary mb-5">
+                    <div class="card-header bg-secondary border-0">
+                        <h4 class="font-weight-semi-bold m-0">Thanh toán</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between mb-3 pt-1">
+                            <h6 class="font-weight-medium">Tổng phụ</h6>
+                            <h6 class="font-weight-medium" id="sub-total"></h6>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h6 class="font-weight-medium">Phí vận chuyển</h6>
+                            <h6 class="font-weight-medium" id="shipping-price"></h6>
+                        </div>
+                    </div>
+                    <div class="card-footer border-secondary bg-transparent">
+                        <div class="d-flex justify-content-between mt-2">
+                            <h5 class="font-weight-bold">Tổng</h5>
+                            <h5 class="font-weight-bold" id="total"></h5>
+                        </div>
+                        <button class="btn btn-block btn-primary my-3 py-3" id="submitButton" onclick="sendParamToController()">Xác nhận mua hàng</button>
+                        <h5 class="font-weight-bold text-danger">[[${message}]]</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Cart End -->
+
+    <th:block th:replace="frontend/fragments/footer :: footer"></th:block>
+    <th:block th:replace="frontend/fragments/common :: script"></th:block>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        let locale = "vi-VN";
+        let currency = new Intl.NumberFormat(locale, { style: "currency", currency: "VND" });
+
+        var shippingPrice = 0;
+
+        document.addEventListener('change', function (event) {
+            if (event.target.classList.contains('checkbox') || event.target.classList.contains('quantity') || event.target.classList.contains('price')) {
+                calculateTotal();
+            }
+        });
+
+        // Hàm tính tổng giá trị
+        function calculateTotal() {
+            // Lấy tất cả các checkbox được chọn
+            const checkboxes = document.querySelectorAll('.checkbox:checked');
+
+            // Tính tổng giá trị
+            let total = 0;
+            checkboxes.forEach(function (checkbox) {
+                const quantity = parseFloat(checkbox.parentElement.parentElement.querySelector('.quantity').value);
+                const price = parseFloat(checkbox.parentElement.parentElement.querySelector('.price').value);
+                total += quantity * price;
+            });
+
+            // Hiển thị
+            document.getElementById('shipping-price').innerHTML = currency.format(shippingPrice);
+            document.getElementById('sub-total').innerHTML = currency.format(total);
+            document.getElementById('total').innerHTML = currency.format(total + shippingPrice);
+        }
+
+        function sendParamToController() {
+            var cartItemIDs = [];
+            var quantities = [];
+            var checkboxes = document.querySelectorAll('input[name="cartItemId"]:checked')
+
+            // Nếu không có checkbox nào được chọn, hiển thị thông báo và ngăn chặn tiếp tục
+            if (checkboxes.length === 0) {
+                alert('Vui lòng chọn ít nhất một checkbox.');
+            } else {
+                let total = 0;
+                checkboxes.forEach(function (checkbox) {
+                    var cartItemId = parseInt(checkbox.value);
+                    var quantity = parseInt(checkbox.parentElement.parentElement.querySelector('#quantity').value);
+                    cartItemIDs.push(cartItemId);
+                    quantities.push(quantity);
+
+                    const price = parseFloat(checkbox.parentElement.parentElement.querySelector('.price').value);
+                    total += quantity * price;
+                });
+
+                total = total + shippingPrice;
+
+                // Gửi yêu cầu AJAX sử dụng Fetch API
+                $.ajax({
+                    url: '/bill/save',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({ cartItemIDs: cartItemIDs, quantities: quantities, totalPrice: total}),
+                    success: function(data) {
+                        console.log(data);
+                        // Xử lý dữ liệu nhận được từ server (nếu cần)
+                    },
+                    error: function(error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+            window.location.href="/bill"
+        }
+    </script>
+
+</body>
+
+</html>

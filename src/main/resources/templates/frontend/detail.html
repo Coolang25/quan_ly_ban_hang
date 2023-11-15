@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+  <head th:replace="frontend/fragments/common :: head('Chi tiết sản phẩm')"></head>
+
+<body>
+  <th:block th:replace="frontend/fragments/header :: header"></th:block>
+
+
+  <!-- Page Header Start -->
+  <div class="container-fluid bg-secondary mb-5">
+    <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+      <h1 class="font-weight-semi-bold text-uppercase mb-3">Chi tiết sản phẩm</h1>
+      <div class="d-inline-flex">
+        <p class="m-0"><a th:href="@{/}">Trang chủ</a></p>
+        <p class="m-0 px-2">-</p>
+        <p class="m-0">Chi tiết sản phẩm</p>
+      </div>
+    </div>
+  </div>
+  <!-- Page Header End -->
+
+
+  <!-- Shop Detail Start -->
+  <div class="container-fluid py-5">
+    <form th:action="@{/cart/save}" th:method="post" th:object="${cartItemDto}" enctype="multipart/form-data" id="myForm">
+      <div class="row px-xl-5">
+        <div class="col-lg-5 pb-5">
+          <div id="product-carousel" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner border">
+              <div class="carousel-item active">
+                <img class="w-100 h-100" th:src="@{'/image-storage/product/' + ${product.id} + '/' + ${product.mainImage}}" alt="Image">
+              </div>
+              <div class="carousel-item"  th:each="image : ${product.images}">
+                <img class="w-100 h-100" th:src="@{'/image-storage/product/' + ${product.id} + '/extras/' + ${image.name}}" alt="Image">
+              </div>
+            </div>
+            <a class="carousel-control-prev" href="#product-carousel" data-slide="prev">
+              <i class="fa fa-2x fa-angle-left text-dark"></i>
+            </a>
+            <a class="carousel-control-next" href="#product-carousel" data-slide="next">
+              <i class="fa fa-2x fa-angle-right text-dark"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-7 pb-5">
+          <h3 class="font-weight-semi-bold">[[${product.name}]]</h3>
+          <div class="d-flex mb-3">
+            <div class="text-primary mr-2">
+              <small class="fas fa-star"></small>
+            </div>
+            <small class="pt-1">Đã bán [[${product.sold}]] sản phẩm</small>
+            <div class="text-primary ml-2">
+              <small class="fas fa-star"></small>
+            </div>
+          </div>
+          <div class="d-flex">
+            <h3 class="font-weight-semi-bold mb-4" th:text="${#numbers.formatDecimal(product.price, 1, 'COMMA', 0, 'POINT')}"></h3>
+            <i class="fas fa-coins ml-1"></i>
+          </div>
+          <p class="mb-4">[[${product.shortDescription}]]</p>
+          <div class="d-flex mb-3">
+            <p class="text-dark font-weight-medium mb-0 mr-3">Sizes:</p>
+            <th:block th:each="result, stt : ${product.sizeList}">
+              <div class="custom-control custom-radio custom-control-inline">
+                <input th:onclick="|showAvailableQuantity(${stt.index})|"
+                       type="radio" class="custom-control-input" th:id="availableQuantity + ${stt.index}" name="size" th:field="${cartItemDto.productSizeId}" th:value="${result.id}" th:data-inStock="${result.inStock}" th:onchange="|updateAvailableQuantity(${stt.index})|">
+                <label class="custom-control-label" th:for="availableQuantity + ${stt.index}">[[${result.sizeName}]]</label>
+              </div>
+            </th:block>
+          </div>
+
+          <div class="d-flex align-items-center mb-4 pt-2">
+            <div class="input-group quantity mr-3" style="width: 130px;">
+              <div class="input-group-btn">
+                <div class="btn btn-primary btn-minus" onclick="decrementQuantity()">
+                  <i class="fa fa-minus"></i>
+                </div>
+              </div>
+              <input type="text" class="form-control bg-secondary text-center" id="quantityInput" th:field="*{intendedQuantity}">
+              <div class="input-group-btn">
+                <div class="btn btn-primary btn-plus" onclick="incrementQuantity()">
+                  <i class="fa fa-plus"></i>
+                </div>
+              </div>
+            </div>
+            <div class="mr-3">
+              <p style="margin-bottom: 0" id="in-stock"></p>
+            </div>
+            <button class="btn btn-primary px-3" type="submit"><i class="fa fa-shopping-cart mr-1"></i> Thêm vào giỏ hàng</button>
+            <p style="margin-bottom: 0" class="text-danger ml-2">[[${message}]]</p>
+          </div>
+          <div class="d-flex pt-2">
+            <p class="text-dark font-weight-medium mb-0 mr-2">Share on:</p>
+            <div class="d-inline-flex">
+              <a class="text-dark px-2" href="https://facebook.com/">
+                <i class="fab fa-facebook-f"></i>
+              </a>
+              <a class="text-dark px-2" href="https://twitter.com/">
+                <i class="fab fa-twitter"></i>
+              </a>
+              <a class="text-dark px-2" href="https://linkedin.com/">
+                <i class="fab fa-linkedin-in"></i>
+              </a>
+              <a class="text-dark px-2" href="https://pinterest.com/">
+                <i class="fab fa-pinterest"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="row px-xl-5">
+      <div class="col">
+        <div class="nav nav-tabs justify-content-center border-secondary mb-4">
+          <a class="nav-item nav-link active" data-toggle="tab" href="#tab-pane-1">Mô tả sản phẩm</a>
+        </div>
+        <div class="tab-content">
+          <div class="tab-pane fade show active" id="tab-pane-1">
+            <h4 class="mb-3">Mô tả sản phẩm</h4>
+            <p>[[${product.fullDescription}]]</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Shop Detail End -->
+
+
+  <th:block th:replace="frontend/fragments/footer :: footer"></th:block>
+  <th:block th:replace="frontend/fragments/common :: script"></th:block>
+
+  <script>
+    var availableQuantity;
+    function updateAvailableQuantity(productIndex) {
+      var availableQuantityInput = document.getElementById("availableQuantity" + productIndex);
+      availableQuantity = parseInt(availableQuantityInput.getAttribute('data-inStock'));
+    }
+
+    function decrementQuantity() {
+      var quantityInput = document.getElementById("quantityInput");
+      var currentQuantity = parseInt(quantityInput.value);
+
+      if (currentQuantity > 1) {
+        quantityInput.value = currentQuantity - 1;
+      }
+    }
+
+    function incrementQuantity() {
+      var quantityInput = document.getElementById("quantityInput");
+      var currentQuantity = parseInt(quantityInput.value);
+
+      if (currentQuantity < availableQuantity) {
+        quantityInput.value = currentQuantity + 1;
+      }
+    }
+
+    function showAvailableQuantity(sttIndex) {
+      var elementId = 'availableQuantity' + sttIndex;
+      document.getElementById('in-stock').innerHTML = document.getElementById(elementId).getAttribute('data-inStock') + ' sản phẩm có sẵn';
+      var quantityInput = document.getElementById("quantityInput");
+      quantityInput.value = 1;
+    }
+
+    document.getElementById("myForm").addEventListener("submit", function(event) {
+      var selectedRatio = document.querySelector('input[name="productSizeId"]:checked');
+
+      if (!selectedRatio) {
+        alert("Bạn phải chọn một Size trước khi submit.");
+        event.preventDefault(); // Ngăn form được gửi nếu không có tỷ lệ được chọn.
+      }
+    });
+  </script>
+
+
+</body>
+
+</html>
