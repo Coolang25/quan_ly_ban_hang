@@ -39,6 +39,7 @@ public class ProductDto {
     List<MultipartFile> multipartFileList;
     List<ProductSizeDto> sizeList = new ArrayList<>();;
     List<ProductImageDto> images = new ArrayList<>();
+    List<CommentDto> comments = new ArrayList<>();
 
     public String getMainImagePath() {
         if (id == null || mainImage == null) return "/images/image-thumbnail.png";

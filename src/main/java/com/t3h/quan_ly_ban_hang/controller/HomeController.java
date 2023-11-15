@@ -1,6 +1,7 @@
 package com.t3h.quan_ly_ban_hang.controller;
 
 import com.t3h.quan_ly_ban_hang.dto.CartItemDto;
+import com.t3h.quan_ly_ban_hang.dto.CommentDto;
 import com.t3h.quan_ly_ban_hang.dto.ProductDto;
 import com.t3h.quan_ly_ban_hang.dto.UserDto;
 import com.t3h.quan_ly_ban_hang.entities.Products;
@@ -233,14 +234,14 @@ public class HomeController {
 
     @GetMapping(value = {"detail/{id}"})
     public String detailProduct(Model model, @PathVariable Long id) {
+        CommentDto commentDto = new CommentDto();
         CartItemDto cartItemDto = new CartItemDto();
         cartItemDto.setIntendedQuantity(1);
         model.addAttribute("categories", categoryService.findAll(""));
         model.addAttribute("brands", brandService.findAll(""));
-        //model.addAttribute("productImages", productService.get(id).getProductImages());
         model.addAttribute("product", productService.get(id));
         model.addAttribute("cartItemDto", cartItemDto);
-        //model.addAttribute("sizes", sizeService.findSizesOfProduct(productService.get(id)));
+        model.addAttribute("commentDto", commentDto);
         return "frontend/detail.html";
     }
 }

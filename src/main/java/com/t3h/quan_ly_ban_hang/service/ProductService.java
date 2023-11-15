@@ -1,9 +1,7 @@
 package com.t3h.quan_ly_ban_hang.service;
 
-import com.t3h.quan_ly_ban_hang.dto.ProductImageDto;
-import com.t3h.quan_ly_ban_hang.dto.ProductSizeDto;
+import com.t3h.quan_ly_ban_hang.dto.*;
 import com.t3h.quan_ly_ban_hang.entities.*;
-import com.t3h.quan_ly_ban_hang.dto.ProductDto;
 import com.t3h.quan_ly_ban_hang.repository.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.BeanUtils;
@@ -40,7 +38,11 @@ public class ProductService {
     @Autowired
     SizeRepo sizeRepo;
     @Autowired
+    UserRepo userRepo;
+    @Autowired
     ProductSizeRepo productSizeRepo;
+    @Autowired
+    CommentRepo commentRepo;
     @Autowired
     ModelMapper modelMapper;
 
@@ -63,6 +65,9 @@ public class ProductService {
         } else {
             List<ProductImages> images = productImageRepo.findAllByProductId(id);
             List<ProductSize> sizes = productSizeRepo.findAllByProductId(id);
+            List<Comment> comments = commentRepo.findAllByProductId(id);
+            List<CommentDto> commentDtos = comments.stream().map(comment -> modelMapper.map(comment, CommentDto.class)).collect(Collectors.toList());
+
             for (ProductSize p : sizes) {
                 sold = sold + p.getSold();
             }
@@ -73,6 +78,13 @@ public class ProductService {
                 ps.setSizeName(sizeRepo.findById(ps.getSizeId()).orElse(null).getName());
             }
             productDto.setSold(sold);
+
+            for (CommentDto commentDto: commentDtos) {
+                commentDto.setUserDto(modelMapper.map(userRepo.findById(commentDto.getUserId()), UserDto.class));
+            }
+
+            productDto.setComments(commentDtos);
+
             return productDto;
         }
 

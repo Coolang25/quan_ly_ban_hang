@@ -122,6 +122,33 @@ INSERT INTO `categories` VALUES (1,'boot.jpg','Boot',_binary ''),(2,'giayda.jpg
 UNLOCK TABLES;
 
 --
+-- Table structure for table `comment`
+--
+
+DROP TABLE IF EXISTS `comment`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `comment` (
+  `ID` bigint NOT NULL AUTO_INCREMENT,
+  `CONTENT` varchar(256) DEFAULT NULL,
+  `USER_ID` bigint DEFAULT NULL,
+  `PRODUCT_ID` bigint DEFAULT NULL,
+  `TIME` timestamp(6) NULL DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `comment`
+--
+
+LOCK TABLES `comment` WRITE;
+/*!40000 ALTER TABLE `comment` DISABLE KEYS */;
+INSERT INTO `comment` VALUES (1,'Đẹp quá',2,22,'2023-11-15 06:36:38.086000'),(2,'Cho xin giá!',3,16,'2023-11-15 07:04:11.695000'),(3,'Đẹp quá',3,16,'2023-11-15 07:04:20.319000');
+/*!40000 ALTER TABLE `comment` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `ordered_item`
 --
 
@@ -306,4 +333,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-11-15 10:52:53
+-- Dump completed on 2023-11-15 14:15:44
