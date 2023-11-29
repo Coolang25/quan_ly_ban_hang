@@ -328,6 +328,34 @@
                     </ul>
                 </li><!-- End Components Nav -->
 
+                <li class="nav-item">
+                    <a class="nav-link collapsed" data-bs-target="#components-nav" data-bs-toggle="collapse" href="#">
+                        <i class="bi bi-menu-button-wide"></i><span>Quản lý đơn hàng</span><i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    <ul id="components-nav" class="nav-content collapse " data-bs-parent="#sidebar-nav">
+                        <li>
+                            <a th:href="@{'/backend/bill/failed'}">
+                                <i class="bi bi-circle"></i><span>Đơn hàng thất bại</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{'/backend/bill/confirmation'}">
+                                <i class="bi bi-circle"></i><span>Đơn hàng chờ xác nhận</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{'/backend/bill/delivered'}">
+                                <i class="bi bi-circle"></i><span>Đơn hàng đang giao</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a th:href="@{'/backend/bill/successful'}">
+                                <i class="bi bi-circle"></i><span>Đơn hàng thành công</span>
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
         </aside><!-- End Sidebar-->
     </th:block>
 

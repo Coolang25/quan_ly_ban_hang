@@ -117,6 +117,23 @@ public class BillService {
         return billDtos;
     }
 
+    public List<BillDto> findAllByStatus(int status) {
+        List<Bill> bills = billRepo.findAllByStatusOrderByCreatedTimeDesc(status);
+        List<BillDto> billDtos = bills.stream().map(bill -> modelMapper.map(bill, BillDto.class)).collect(Collectors.toList());
+
+        for (BillDto billDto : billDtos) {
+            List<OrderedItemDto> orderedItemDtos = orderedItemRepo.findAllByBillId(billDto.getId()).stream().map(orderedItem -> modelMapper.map(orderedItem, OrderedItemDto.class)).collect(Collectors.toList());
+            for (OrderedItemDto orderedItemDto: orderedItemDtos) {
+                ProductSize productSize = productSizeRepo.findById(orderedItemDto.getProductSizeId()).orElse(null);
+                orderedItemDto.setProductDto(modelMapper.map(productRepo.findById(productSize.getProductId()), ProductDto.class));
+                orderedItemDto.setSizeName(sizeRepo.findById(productSize.getSizeId()).orElse(null).getName());
+            }
+            billDto.setOrderedItemDtos(orderedItemDtos);
+        }
+
+        return billDtos;
+    }
+
     public BillDto updateStatus(Long id, BillDto billDto) {
         Bill bill = billRepo.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         int status = billDto.getStatus();

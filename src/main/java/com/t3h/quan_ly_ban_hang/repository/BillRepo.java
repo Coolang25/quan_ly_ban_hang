@@ -9,4 +9,6 @@ public interface BillRepo extends JpaRepository<Bill, Long> {
     List<Bill> findAllByUserIdOrderByCreatedTimeDesc(Long userId);
 
     List<Bill> findAllByStatusIn(List<Integer> statuses);
+
+    List<Bill> findAllByStatusOrderByCreatedTimeDesc(int status);
 }

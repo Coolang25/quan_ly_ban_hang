@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="backend/fragments/common :: head('Trang chủ')"></head>
+
+<body>
+<th:block th:replace="backend/fragments/header :: header"></th:block>
+
+
+<main id="main" class="main">
+    <section class="section dashboard">
+        <div class="row">
+
+            <!-- Left side columns -->
+            <div class="col-lg-12">
+                <div class="row">
+                    <!-- Recent Sales -->
+                    <div class="col-12">
+                        <h3 class="text-center mb-3">[[${message}]]</h3>
+                        <th:block th:if="${billDtos}">
+                            <div class="table-responsive mb-5">
+                                <div th:each="bill : ${billDtos}">
+                                    <hr class="my-4">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="col-1 text-danger justify-content-center">
+                                            <p>ID: [[${bill.id}]]</p>
+                                        </div>
+                                        <div class="col-3 text-danger justify-content-center">
+                                            <p th:if="${bill.status == 0}">Đơn hàng thất bại</p>
+                                            <p th:if="${bill.status == 1}">Đơn hàng đang chờ xác nhận</p>
+                                            <p th:if="${bill.status == 2}">Đang giao hàng</p>
+                                            <p th:if="${bill.status == 3}">Giao hàng thành công</p>
+                                        </div>
+                                        <div class="col-3 text-danger justify-content-center">
+                                            <p>Thành tiền: [[${#numbers.formatDecimal(bill.totalPrice, 1, 'COMMA', 0, 'POINT')}]]</p>
+                                        </div>
+                                        <div class="col-3 text-danger justify-content-center">
+                                            <p>Ngày mua [[${#dates.format(bill.createdTime, 'dd/MM/yyyy HH:mm:ss')}]]</p>
+                                        </div>
+                                        <div class="col-2 text-danger justify-content-center">
+                                            <a th:href="@{'/backend/bill/' + ${bill.id}}">Cập nhật trạng thái đơn hàng</a>
+                                        </div>
+                                    </div>
+                                    <th:block th:each="item : ${bill.orderedItemDtos}">
+                                        <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                            <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                                                <img th:src="@{${item.productDto.mainImagePath}}"
+                                                     class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
+                                            </div>
+                                            <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                                                <h6 class="text-muted">[[${item.productDto.name}]]</h6>
+                                                <h6 class="text-black mb-0">Size: [[${item.sizeName}]]</h6>
+                                            </div>
+                                            <div class="col-md-3 col-lg-3 col-xl-2 text-center">
+                                                <h6 class="text-black mb-0">Số lượng: [[${item.quantity}]]</h6>
+                                            </div>
+                                            <div class="col-md-3 col-lg-2 col-xl-2 text-center text-end">
+                                                <h6 class="mb-0" th:text="${#numbers.formatDecimal(item.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
+                                            </div>
+                                        </div>
+                                    </th:block>
+                                </div>
+
+                                <hr class="my-4">
+                            </div>
+                        </th:block>
+
+                        <th:block th:if="${billDto}">
+                            <div class="table-responsive mb-5">
+                                <h5 class="text-danger mb-3">[[${message}]]</h5>
+                                <hr class="my-4">
+                                <form class="mb-3" th:action="@{'/backend/bill/' + ${billDto.id} + '/save_status'}" th:method="post" th:object="${billDto}" enctype="multipart/form-data">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="col-1 text-danger justify-content-center">
+                                            <label for="id" class="col-sm-2 col-form-label">ID:</label>
+                                            <div class="col-sm-10">
+                                                <input type="text" class="form-control" id="id" th:field="*{id}" required readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-danger justify-content-center">
+                                            <label class="col-sm-4 col-form-label">Trạng thái: </label>
+                                            <div class="col-sm-8">
+                                                <select th:field="*{status}" class="form-control" required>
+                                                    <option th:value="0">Đơn hàng thất bại</option>
+                                                    <option th:value="1">Đơn hàng đang chờ xác nhận</option>
+                                                    <option th:value="2">Đang giao hàng</option>
+                                                    <option th:value="3">Giao hàng thành công</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-danger justify-content-center">
+                                            <label for="totalPrice" class="col-sm-5 col-form-label">Thành tiền:</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="totalPrice" th:field="*{totalPrice}" required readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-3 text-danger justify-content-center">
+                                            <label for="createdTime" class="col-sm-5 col-form-label">Thời gian:</label>
+                                            <div class="col-sm-7">
+                                                <input type="text" class="form-control" id="createdTime" th:field="*{createdTime}" required readonly>
+                                            </div>
+                                        </div>
+                                        <div class="col-1 text-danger justify-content-center">
+                                            <label class="col-sm-2 col-form-label"></label>
+                                            <div class="col-sm-10">
+                                                <button type="submit" class="btn btn-primary">
+                                                    Cập nhật
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <th:block th:each="item : ${billDto.orderedItemDtos}">
+                                    <div class="row mb-4 d-flex justify-content-between align-items-center">
+                                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                                            <img th:src="@{${item.productDto.mainImagePath}}"
+                                                 class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
+                                        </div>
+                                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
+                                            <h6 class="text-muted">[[${item.productDto.name}]]</h6>
+                                            <h6 class="text-black mb-0">Size: [[${item.sizeName}]]</h6>
+                                        </div>
+                                        <div class="col-md-3 col-lg-3 col-xl-2 text-center">
+                                            <h6 class="text-black mb-0">Số lượng: [[${item.quantity}]]</h6>
+                                        </div>
+                                        <div class="col-md-3 col-lg-2 col-xl-2 text-center text-end">
+                                            <h6 class="mb-0" th:text="${#numbers.formatDecimal(item.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
+                                        </div>
+                                    </div>
+                                </th:block>
+                                <hr class="my-4">
+                            </div>
+                        </th:block>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main><!-- End #main -->
+
+<th:block th:replace="backend/fragments/footer :: footer"></th:block>
+<th:block th:replace="backend/fragments/common :: script"></th:block>
+</body>
+
+</html>

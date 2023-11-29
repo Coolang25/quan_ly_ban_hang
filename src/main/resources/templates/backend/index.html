@@ -121,126 +121,79 @@
               </div>
 
             </div><!-- End Customers Card -->
-
-            <!-- Recent Sales -->
+            <!-- Top Selling -->
             <div class="col-12">
-              <th:block th:if="${billDtos}">
-                <div class="table-responsive mb-5">
-                  <div th:each="bill : ${billDtos}">
-                    <hr class="my-4">
-                    <div class="d-flex justify-content-center">
-                      <div class="col-1 text-danger justify-content-center">
-                        <p>ID: [[${bill.id}]]</p>
-                      </div>
-                      <div class="col-3 text-danger justify-content-center">
-                        <p th:if="${bill.status == 0}">Đơn hàng thất bại</p>
-                        <p th:if="${bill.status == 1}">Đơn hàng đang chờ xác nhận</p>
-                        <p th:if="${bill.status == 2}">Đang giao hàng</p>
-                        <p th:if="${bill.status == 3}">Giao hàng thành công</p>
-                      </div>
-                      <div class="col-3 text-danger justify-content-center">
-                        <p>Thành tiền: [[${#numbers.formatDecimal(bill.totalPrice, 1, 'COMMA', 0, 'POINT')}]]</p>
-                      </div>
-                      <div class="col-3 text-danger justify-content-center">
-                        <p>Ngày mua [[${#dates.format(bill.createdTime, 'dd/MM/yyyy HH:mm:ss')}]]</p>
-                      </div>
-                      <div class="col-2 text-danger justify-content-center">
-                        <a th:href="@{'/backend/bill/' + ${bill.id}}">Cập nhật trạng thái đơn hàng</a>
-                      </div>
-                    </div>
-                    <th:block th:each="item : ${bill.orderedItemDtos}">
-                      <div class="row mb-4 d-flex justify-content-between align-items-center">
-                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
-                          <img th:src="@{${item.productDto.mainImagePath}}"
-                               class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
-                        </div>
-                        <div class="col-md-3 col-lg-3 col-xl-3 text-center">
-                          <h6 class="text-muted">[[${item.productDto.name}]]</h6>
-                          <h6 class="text-black mb-0">Size: [[${item.sizeName}]]</h6>
-                        </div>
-                        <div class="col-md-3 col-lg-3 col-xl-2 text-center">
-                          <h6 class="text-black mb-0">Số lượng: [[${item.quantity}]]</h6>
-                        </div>
-                        <div class="col-md-3 col-lg-2 col-xl-2 text-center text-end">
-                          <h6 class="mb-0" th:text="${#numbers.formatDecimal(item.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
-                        </div>
-                      </div>
-                    </th:block>
-                  </div>
+              <div class="card top-selling overflow-auto">
 
-                  <hr class="my-4">
+                <div class="filter">
+                  <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+                  <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                    <li class="dropdown-header text-start">
+                      <h6>Filter</h6>
+                    </li>
+
+                    <li><a class="dropdown-item" href="#">Today</a></li>
+                    <li><a class="dropdown-item" href="#">This Month</a></li>
+                    <li><a class="dropdown-item" href="#">This Year</a></li>
+                  </ul>
                 </div>
-              </th:block>
 
-              <th:block th:if="${billDto}">
-                <div class="table-responsive mb-5">
-                  <h5 class="text-danger mb-3">[[${message}]]</h5>
-                  <hr class="my-4">
-                  <form class="mb-3" th:action="@{'/backend/bill/' + ${billDto.id} + '/save_status'}" th:method="post" th:object="${billDto}" enctype="multipart/form-data">
-                    <div class="d-flex justify-content-center">
-                      <div class="col-1 text-danger justify-content-center">
-                        <label for="id" class="col-sm-2 col-form-label">ID:</label>
-                        <div class="col-sm-10">
-                          <input type="text" class="form-control" id="id" th:field="*{id}" required readonly>
-                        </div>
-                      </div>
-                      <div class="col-4 text-danger justify-content-center">
-                        <label class="col-sm-4 col-form-label">Trạng thái: </label>
-                        <div class="col-sm-8">
-                          <select th:field="*{status}" class="form-control" required>
-                            <option th:value="0">Đơn hàng thất bại</option>
-                            <option th:value="1">Đơn hàng đang chờ xác nhận</option>
-                            <option th:value="2">Đang giao hàng</option>
-                            <option th:value="3">Giao hàng thành công</option>
-                          </select>
-                        </div>
-                      </div>
-                      <div class="col-2 text-danger justify-content-center">
-                        <label for="totalPrice" class="col-sm-5 col-form-label">Thành tiền:</label>
-                        <div class="col-sm-7">
-                          <input type="text" class="form-control" id="totalPrice" th:field="*{totalPrice}" required readonly>
-                        </div>
-                      </div>
-                      <div class="col-3 text-danger justify-content-center">
-                        <label for="createdTime" class="col-sm-5 col-form-label">Thời gian:</label>
-                        <div class="col-sm-7">
-                          <input type="text" class="form-control" id="createdTime" th:field="*{createdTime}" required readonly>
-                        </div>
-                      </div>
-                      <div class="col-1 text-danger justify-content-center">
-                        <label class="col-sm-2 col-form-label"></label>
-                        <div class="col-sm-10">
-                          <button type="submit" class="btn btn-primary">
-                              Cập nhật
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </form>
+                <div class="card-body pb-0">
+                  <h5 class="card-title">Top Selling <span>| Today</span></h5>
 
-                  <th:block th:each="item : ${billDto.orderedItemDtos}">
-                    <div class="row mb-4 d-flex justify-content-between align-items-center">
-                      <div class="col-md-3 col-lg-3 col-xl-3 text-center">
-                        <img th:src="@{${item.productDto.mainImagePath}}"
-                             class="img-fluid rounded-3" alt="Cotton T-shirt" style="width: 120px">
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-3 text-center">
-                        <h6 class="text-muted">[[${item.productDto.name}]]</h6>
-                        <h6 class="text-black mb-0">Size: [[${item.sizeName}]]</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-3 col-xl-2 text-center">
-                        <h6 class="text-black mb-0">Số lượng: [[${item.quantity}]]</h6>
-                      </div>
-                      <div class="col-md-3 col-lg-2 col-xl-2 text-center text-end">
-                        <h6 class="mb-0" th:text="${#numbers.formatDecimal(item.productDto.price, 1, 'COMMA', 0, 'POINT')}"></h6>
-                      </div>
-                    </div>
-                  </th:block>
-                  <hr class="my-4">
+                  <table class="table table-borderless">
+                    <thead>
+                    <tr>
+                      <th scope="col">Preview</th>
+                      <th scope="col">Product</th>
+                      <th scope="col">Price</th>
+                      <th scope="col">Sold</th>
+                      <th scope="col">Revenue</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                      <th scope="row"><a href="#"><img src="/backend/assets/img/product-1.jpg" alt=""></a></th>
+                      <td><a href="#" class="text-primary fw-bold">Ut inventore ipsa voluptas nulla</a></td>
+                      <td>$64</td>
+                      <td class="fw-bold">124</td>
+                      <td>$5,828</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><a href="#"><img src="/backend/assets/img/product-2.jpg" alt=""></a></th>
+                      <td><a href="#" class="text-primary fw-bold">Exercitationem similique doloremque</a></td>
+                      <td>$46</td>
+                      <td class="fw-bold">98</td>
+                      <td>$4,508</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><a href="#"><img src="/backend/assets/img/product-3.jpg" alt=""></a></th>
+                      <td><a href="#" class="text-primary fw-bold">Doloribus nisi exercitationem</a></td>
+                      <td>$59</td>
+                      <td class="fw-bold">74</td>
+                      <td>$4,366</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><a href="#"><img src="/backend/assets/img/product-4.jpg" alt=""></a></th>
+                      <td><a href="#" class="text-primary fw-bold">Officiis quaerat sint rerum error</a></td>
+                      <td>$32</td>
+                      <td class="fw-bold">63</td>
+                      <td>$2,016</td>
+                    </tr>
+                    <tr>
+                      <th scope="row"><a href="#"><img src="/backend/assets/img/product-5.jpg" alt=""></a></th>
+                      <td><a href="#" class="text-primary fw-bold">Sit unde debitis delectus repellendus</a></td>
+                      <td>$79</td>
+                      <td class="fw-bold">41</td>
+                      <td>$3,239</td>
+                    </tr>
+                    </tbody>
+                  </table>
+
                 </div>
-              </th:block>
 
-            </div>
+              </div>
+            </div><!-- End Top Selling -->
           </div>
         </div>
       </div>
