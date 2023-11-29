@@ -95,16 +95,16 @@ public class UserService {
         return userDto;
     }
 
-//    public UserDto updatePassword(Long id, UserDto userDto) {
-//        User user = userRepo.findById(id)
-//                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-//        String passWord = passwordEncoder.encode(userDto.getNewPassword());
-//        BeanUtils.copyProperties(userDto, user);
-//        userDto.setPassword(passWord);
-//        user.setPassword(passWord);
-//        userRepo.save(user);
-//        return userDto;
-//    }
+    public UserDto updatePassword(Long id, String newPassWord) {
+        User user = userRepo.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        String passWord = passwordEncoder.encode(newPassWord);
+        user.setPassword(passWord);
+        userRepo.save(user);
+        UserDto userDto = new UserDto();
+        BeanUtils.copyProperties(user, userDto);
+        return userDto;
+    }
 
     public void delete(Long id) {
         userRepo.deleteById(id);

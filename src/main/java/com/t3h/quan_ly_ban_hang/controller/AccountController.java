@@ -1,5 +1,6 @@
 package com.t3h.quan_ly_ban_hang.controller;
 
+import com.t3h.quan_ly_ban_hang.dto.ChangePasswordRequest;
 import com.t3h.quan_ly_ban_hang.dto.UserDto;
 import com.t3h.quan_ly_ban_hang.service.BrandService;
 import com.t3h.quan_ly_ban_hang.service.CategoryService;
@@ -90,9 +91,11 @@ public class AccountController {
     @GetMapping(value = "/account/{id}")
     public String accountInfomation(Model model, @PathVariable Long id) {
         UserDto userDto = userService.get(id);
+        ChangePasswordRequest changePasswordRequest = new ChangePasswordRequest();
         model.addAttribute("userDto", userDto);
         model.addAttribute("categories", categoryService.findAll(""));
         model.addAttribute("brands", brandService.findAll(""));
+        model.addAttribute("changePasswordRequest", changePasswordRequest);
         return "/frontend/account.html";
     }
 
@@ -125,38 +128,38 @@ public class AccountController {
 
     }
 
-//    @RequestMapping(method = RequestMethod.POST, value = "/account/{id}/change", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//    String editPassword(@ModelAttribute @Valid UserDto userDto, @RequestParam(value = "fileImage", required = false) MultipartFile imageMultipart,
-//                       @PathVariable Long id,
-//                       BindingResult bindingResult,
-//                       Model model,
-//                       RedirectAttributes redirectAttributes) throws IOException {
-//
-//
-//        if (!Objects.equals(passwordEncoder.encode(userDto.getPassword()), userService.get(id).getPassword())){
-//            bindingResult.rejectValue("password", "error.userDto", "Mật khẩu không đúng");
-//        }
-//        if (bindingResult.hasErrors()) {
-//            return "/frontend/account.html";
-//        }
-//
-//        Object result = null;
-//
-//        UserSaveFileHelper.setAvatarName(imageMultipart, userDto);
-//
-//        result = userService.updatePassword(id, userDto);
-//        String msg = "Cập nhật";
-//
-//        UserSaveFileHelper.saveUploadedAvatar(imageMultipart, userDto);
-//
-//        if (Objects.equals(result, null)) {
-//            model.addAttribute("message", msg + " fail");
-//            return "/frontend/account.html";
-//        }
-//        redirectAttributes.addFlashAttribute("message", "Cập nhật mật khẩu thành công");
-//        return "redirect:/account/" + id;
-//
-//    }
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(method = RequestMethod.POST, value = "/account/{id}/change", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    String changePassword(@ModelAttribute @Valid ChangePasswordRequest changePasswordRequest,
+                          @PathVariable Long id,
+                          BindingResult bindingResult,
+                          Model model,
+                          RedirectAttributes redirectAttributes) throws IOException {
+
+
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), userService.get(id).getPassword())){
+            bindingResult.rejectValue("oldPassword", "error.changePasswordRequest", "Mật khẩu cũ không đúng");
+        }
+        if (bindingResult.hasErrors()) {
+            UserDto userDto = userService.get(id);
+            model.addAttribute("userDto", userDto);
+            return "/frontend/account.html";
+        }
+
+        Object result = null;
+
+
+
+        result = userService.updatePassword(id, changePasswordRequest.getNewPassword());
+
+        if (Objects.equals(result, null)) {
+            model.addAttribute("message", "Đổi mật khẩu thất bại");
+            return "/frontend/account.html";
+        }
+        redirectAttributes.addFlashAttribute("message1", "Cập nhật mật khẩu thành công");
+        return "redirect:/account/" + id;
+
+    }
 
     @RequestMapping("/403")
     public String accessDenied() {
